@@ -1,42 +1,22 @@
 import { Schema, Document, models, model } from 'mongoose';
 
-
-export interface IJob extends Document {
+export interface JobDocument extends Document {
   title: string;
   description: string;
   location: string;
-  date: Date;
   images: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const JobSchema: Schema = new Schema(
+const jobSchema = new Schema<JobDocument>(
   {
-    title: {
-      type: String,
-      required: [true, 'Please provide a title for the job'],
-    },
-    description: {
-      type: String,
-      required: [true, 'Please provide a description'],
-    },
-    location: {
-      type: String,
-      required: [true, 'Please provide a location'],
-    },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
-    images: [
-      {
-        type: String,
-      },
-    ],
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    location: { type: String, required: true },
+    images: [{ type: String }],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Avoid model overwrite in Next.js hot reload
-export default models.Job || model<IJob>('Job', JobSchema);
+export default models.Job<JobDocument> || model<JobDocument>('Job', jobSchema);
